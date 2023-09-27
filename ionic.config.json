@@ -1,0 +1,7 @@
+{
+  "name": "bipper",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
