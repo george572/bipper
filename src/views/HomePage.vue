@@ -82,7 +82,6 @@ const checkPassCode = () => {
 }
 
 .login-input-wrapper {
-  margin-top: 50%;
-  margin: 50% auto 0;
+  margin: 50% auto;
 }
 </style>
