@@ -1,6 +1,9 @@
 <script setup lang='ts'>
-import { IonBackButton, IonButtons, IonIcon, IonCard, IonText, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonButton  } from '@ionic/vue';
+import { IonBackButton, IonButtons, IonIcon, IonText, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonButton  } from '@ionic/vue';
 import { useRouter } from 'vue-router';
+import {chevronForward} from 'ionicons/icons';
+
+
 
 const router = useRouter();
 </script>
@@ -24,25 +27,28 @@ const router = useRouter();
             <ion-card-header>
                 <ion-card-title class="ion-margin-left">
                     Action
-                    <ion-icon name="add-outline"></ion-icon>
-
                 </ion-card-title>
             </ion-card-header>
             <ion-card-content class="storage-action-btn-wrapper"
             >
                 <ion-button color="dark" >
-                    <ion-icon name="chevron-forward-outline"></ion-icon>
                     Take Product
-
+                    <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
                 </ion-button>
                 <ion-text color="medium" class="button-description">
                     If you want to take the product from the storage to the kitchen
                 </ion-text>
-                <ion-button size="default"  color="dark" class="submit-btn ion-margin-top">Add Product</ion-button>
+                <ion-button size="default"  color="dark" class="submit-btn ion-margin-top">
+                    Add Product
+                    <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
+                </ion-button>
                 <ion-text color="medium" class="button-description">
                     If you want to add new product in the storage, or re-stock already present one 
                 </ion-text>
-                <ion-button size="default"  color="dark" class="submit-btn ion-margin-top">Quick search</ion-button>
+                <ion-button size="default"  color="dark" class="submit-btn ion-margin-top">
+                    Quick search
+                    <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
+                </ion-button>
                 <ion-text color="medium" class="button-description">
                     If you've set the reference name for the product while adding it in the storage, 
                     you can quickly search the information about it using quick search 
