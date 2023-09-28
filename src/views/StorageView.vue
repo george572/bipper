@@ -6,6 +6,10 @@ import {chevronForward} from 'ionicons/icons';
 
 
 const router = useRouter();
+
+const takeProduct = () => {
+    router.push({name: 'take-products'})
+}
 </script>
 
 <template>
@@ -31,7 +35,7 @@ const router = useRouter();
             </ion-card-header>
             <ion-card-content class="storage-action-btn-wrapper"
             >
-                <ion-button color="dark" >
+                <ion-button color="dark" @click="takeProduct">
                     Take Product
                     <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
                 </ion-button>
