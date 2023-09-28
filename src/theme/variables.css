@@ -67,6 +67,9 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-medium-shade: #808289;
   --ion-color-medium-tint: #9d9fa6;
 
+
+  --ion-color-silver : #c0c0c0;
+
   /** light **/
   --ion-color-light: #f4f5f8;
   --ion-color-light-rgb: 244, 245, 248;
@@ -74,6 +77,15 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  --ion-input {
+    --background: green!important;
+  }
+
+  --ion-button {
+    --background: #c0c0c0;
+  }
+
 }
 
 @media (prefers-color-scheme: dark) {
