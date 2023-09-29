@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { IonButton, IonBackButton, IonButtons, IonTitle, IonContent, IonText, IonHeader,IonToolbar, IonItem, IonLabel, IonList} from '@ionic/vue';
+import { IonButton, IonBackButton, IonButtons, IonTitle, IonContent, IonText, IonHeader,IonToolbar, IonCardHeader, IonCardContent, IonCardTitle, IonItem, IonLabel, IonList} from '@ionic/vue';
 import { useScanner } from "@/composables/useScanner";
 
 const { startScan, stopScan, isScanning, barcodeData } = useScanner();
@@ -17,7 +17,7 @@ const { startScan, stopScan, isScanning, barcodeData } = useScanner();
             <ion-buttons slot="start">
                 <ion-back-button default-href="#" color="primary"></ion-back-button>
               </ion-buttons>
-          <ion-title class="ion-text-center page-title">Take Product From Storage</ion-title>
+          <ion-title class="ion-text-center page-title">Add New Product</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-content>
@@ -39,7 +39,7 @@ const { startScan, stopScan, isScanning, barcodeData } = useScanner();
                         <ion-item>
                             <ion-label class="ion-text-wrap">
                                 Scanner may occasionally get the barcode value incorrectly.
-                                If you know for certain that the product is in stock, try re-scanning 
+                                It's recommended to check the numbers time-to-time on the actual barcode and the scanned barcode results
                             </ion-label>
                         </ion-item>
 

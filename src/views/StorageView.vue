@@ -7,8 +7,8 @@ import {chevronForward} from 'ionicons/icons';
 
 const router = useRouter();
 
-const takeProduct = () => {
-    router.push({name: 'take-products'})
+const takeProduct = (action: string) => {
+    router.push({name: 'manage-products', query: { action: action }})
 }
 </script>
 
@@ -35,14 +35,14 @@ const takeProduct = () => {
             </ion-card-header>
             <ion-card-content class="storage-action-btn-wrapper"
             >
-                <ion-button color="dark" @click="takeProduct">
+                <ion-button color="dark" @click="takeProduct('take')">
                     Take Product
                     <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
                 </ion-button>
                 <ion-text color="medium" class="button-description">
                     If you want to take the product from the storage to the kitchen
                 </ion-text>
-                <ion-button size="default"  color="dark" class="submit-btn ion-margin-top">
+                <ion-button size="default"  @click="takeProduct('add')" color="dark" class="submit-btn ion-margin-top">
                     Add Product
                     <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
                 </ion-button>

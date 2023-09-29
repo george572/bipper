@@ -18,10 +18,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/StorageView.vue"),
   },
   {
-    path: '/take-products',
-    name: 'take-products',
-    component: () => import("@/views/StorageTakeProduct.vue"),
-  }
+    path: '/manage-products',
+    name: 'manage-products',
+    component: () => import("@/views/StorageProductsManagement.vue"),
+  },
 ]
 
 const router = createRouter({
