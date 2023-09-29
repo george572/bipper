@@ -24,7 +24,7 @@ target 'App' do
   # Add your Pods here
   pod 'FirebaseAuth'
   pod 'FirebaseFirestore'
-
+  pod 'GoogleMLKit/TextRecognition', '4.0.0'
 end
 
 post_install do |installer|
