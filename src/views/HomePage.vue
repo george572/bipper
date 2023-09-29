@@ -31,7 +31,7 @@ const checkPassCode = () => {
         <ion-card-title class="ion-text-center">Enter Passcode</ion-card-title>
         <ion-card>
           <ion-item>
-            <ion-input label="Passcode" type="password" v-model="passCodeModel" autofocus></ion-input>
+            <ion-input label="Passcode" type="tel" v-model="passCodeModel" autofocus></ion-input>
           </ion-item>
         </ion-card>
       </div>
@@ -82,6 +82,7 @@ const checkPassCode = () => {
 }
 
 .login-input-wrapper {
-  margin: 50% auto;
+  margin-top: 50%;
+  margin: 50% auto 0;
 }
 </style>
