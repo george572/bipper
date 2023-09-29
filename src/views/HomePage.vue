@@ -1,88 +1,100 @@
-<script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonFooter, IonToolbar, IonCard, IonInput, IonCardTitle, IonItem, IonButton } from '@ionic/vue';
-import { ref } from 'vue';
+<script setup lang='ts'>
+import { IonBackButton, IonButtons, IonIcon, IonText, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonButton  } from '@ionic/vue';
 import { useRouter } from 'vue-router';
+import {chevronForward} from 'ionicons/icons';
+import { useCounterStore } from '@/pinia';
+import { onMounted } from 'vue';
 
+
+const store = useCounterStore();
+
+onMounted(() => {
+    console.log(store)
+})
 const router = useRouter();
-const passCodeModel = ref("");
 
-const checkPassCode = () => {
-  // make request to server and check for the pass code
-  // ignoring for now unless back-end is implemented
-  console.log(passCodeModel);
-  router.push({ name : "storage"});
+const takeProduct = (action: string) => {
+    router.push({name: 'manage-products', query: { action: action }})
 }
 </script>
 
 <template>
-  <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Bipper - Home</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true" color="light" >
-      <ion-header collapse="condense">
-        <ion-toolbar color="light">
-          <ion-title size="large">Bipper.</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <div class="login-input-wrapper">
-        <ion-card-title class="ion-text-center">Enter Passcode</ion-card-title>
-        <ion-card>
-          <ion-item>
-            <ion-input label="Passcode" type="tel" v-model="passCodeModel" autofocus></ion-input>
-          </ion-item>
-        </ion-card>
-      </div>
-
-      <ion-item class="submit-btn-wrapper" color="light">
-        <ion-button size="default" class="submit-btn" color="dark" @click="checkPassCode">Log In</ion-button>
-      </ion-item>
-    </ion-content>
-    <ion-footer collapse="condense">
-      <ion-toolbar class="ion-text-center">
-        <p>Tip: Any Passcode Works for now</p>
-      </ion-toolbar>
-    </ion-footer>
-  </ion-page>
+    <ion-page>
+        <ion-header :translucent="true">
+          <ion-toolbar>
+            <ion-title>Storage</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content :fullscreen="true" >
+          <ion-header collapse="condense">
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-back-button default-href="#" color="primary"></ion-back-button>
+                  </ion-buttons>
+              <ion-title class="ion-text-center page-title">Storage Management</ion-title>
+            </ion-toolbar>
+          </ion-header>
+            <ion-card-header>
+                <ion-card-title class="ion-margin-left">
+                    Action
+                </ion-card-title>
+                <ion-text>Collection data: {{store.collectionData}}</ion-text>
+                <ion-button @click="store.addDataInDb">Add collection to DB</ion-button>
+            </ion-card-header>
+            <ion-card-content class="storage-action-btn-wrapper"
+            >
+                <ion-button color="dark" @click="takeProduct('take')">
+                    Take Product
+                    <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
+                </ion-button>
+                <ion-text color="medium" class="button-description">
+                    If you want to take the product from the storage to the kitchen
+                </ion-text>
+                <ion-button size="default"  @click="takeProduct('add')" color="dark" class="submit-btn ion-margin-top">
+                    Add Product
+                    <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
+                </ion-button>
+                <ion-text color="medium" class="button-description">
+                    If you want to add new product in the storage, or re-stock already present one 
+                </ion-text>
+                <ion-button size="default"  color="dark" class="submit-btn ion-margin-top">
+                    Quick search
+                    <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
+                </ion-button>
+                <ion-text color="medium" class="button-description">
+                    If you've set the reference name for the product while adding it in the storage, 
+                    you can quickly search the information about it using quick search 
+                </ion-text>
+            </ion-card-content
+            >
+        </ion-content>
+    </ion-page>
 </template>
 
-
-
 <style scoped>
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+
+.action-btn-wrapper {
+    margin: 20px 0;
 }
 
-
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
+.ion-card-title {
+    font-size: 20px;
+}
+.storage-action-btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0 18px 20px;
 }
 
-#container a {
-  text-decoration: none;
+.button-description {
+    padding: 3px 8px 5px;
 }
 
-.submit-btn {
-  margin: 5px auto;
-  display: block;
-  width: 100%;
-}
+.divider {
+    width: 100%;
+    margin: 10px auto;
+    height: 0.5px;
+    background-color: rgba(0,0,0,0.5);
 
-:host(.ion-color:not(.item-fill-solid):not(.item-fill-outline)) .item-native, :host(.ion-color:not(.item-fill-solid):not(.item-fill-outline)) .item-inner {
-  border: none !important;
-}
-
-.login-input-wrapper {
-  margin-top: 50%;
-  margin: 50% auto 0;
 }
 </style>

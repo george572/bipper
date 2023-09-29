@@ -12,6 +12,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@capacitor-firebase/firestore": "^5.1.0-dev.3050d98.1695803101",
     "@capacitor-mlkit/barcode-scanning": "^5.3.0",
     "@capacitor/app": "5.0.6",
     "@capacitor/core": "5.4.1",
@@ -22,6 +23,7 @@
     "@ionic/vue": "^7.0.0",
     "@ionic/vue-router": "^7.0.0",
     "ionicons": "^7.0.0",
+    "pinia": "^2.1.6",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
