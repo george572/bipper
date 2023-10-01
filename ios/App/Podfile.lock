@@ -606,6 +606,10 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (5.0.6):
     - Capacitor
+  - CapacitorCamera (5.0.7):
+    - Capacitor
+  - CapacitorCommunityImageToText (5.0.2):
+    - Capacitor
   - CapacitorCordova (5.4.1)
   - CapacitorFirebaseFirestore (5.1.0-dev.3050d98.1695803101):
     - Capacitor
@@ -784,6 +788,8 @@ PODS:
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+  - "CapacitorCommunityImageToText (from `../../node_modules/@capacitor-community/image-to-text`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorFirebaseFirestore (from `../../node_modules/@capacitor-firebase/firestore`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
@@ -828,6 +834,10 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
     :path: "../../node_modules/@capacitor/app"
+  CapacitorCamera:
+    :path: "../../node_modules/@capacitor/camera"
+  CapacitorCommunityImageToText:
+    :path: "../../node_modules/@capacitor-community/image-to-text"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorFirebaseFirestore:
@@ -846,6 +856,8 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   Capacitor: 4c0681b47eebeba1f902093d24149cf2f518393e
   CapacitorApp: 024e1b1bea5f883d79f6330d309bc441c88ad04a
+  CapacitorCamera: 084b0b228bba7d00587910337b1c89e93b1d32ab
+  CapacitorCommunityImageToText: 954740fa58725b6f3d5b6d77d1fcd6c98c7594df
   CapacitorCordova: 1222fdd78bfd0d323cc22bf254eed1484fe6c92a
   CapacitorFirebaseFirestore: 3fef905ddd8ead13f7b78e2d97e21ac4a9502435
   CapacitorHaptics: 1fffc1217c7e64a472d7845be50fb0c2f7d4204c
@@ -877,6 +889,6 @@ SPEC CHECKSUMS:
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
 
-PODFILE CHECKSUM: 8384a3ad44c9e18bf6e95bd1144ff16e8b4b3746
+PODFILE CHECKSUM: 685c7f908587fd7a96b7146be2e3d893e8033bce
 
 COCOAPODS: 1.13.0

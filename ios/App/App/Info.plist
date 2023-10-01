@@ -47,5 +47,14 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to the camera to take photos for profile pictures.</string>
+
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We require access to add photos to your library for saving edited images.</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access to your photo library is necessary for selecting and uploading images.</string>
+
 </dict>
 </plist>

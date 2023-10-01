@@ -2,15 +2,7 @@
 import { IonBackButton, IonButtons, IonIcon, IonText, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonButton  } from '@ionic/vue';
 import { useRouter } from 'vue-router';
 import {chevronForward} from 'ionicons/icons';
-import { useCounterStore } from '@/pinia';
-import { onMounted } from 'vue';
 
-
-const store = useCounterStore();
-
-onMounted(() => {
-    console.log(store)
-})
 const router = useRouter();
 
 const takeProduct = (action: string) => {
@@ -38,8 +30,6 @@ const takeProduct = (action: string) => {
                 <ion-card-title class="ion-margin-left">
                     Action
                 </ion-card-title>
-                <ion-text>Collection data: {{store.collectionData}}</ion-text>
-                <ion-button @click="store.addDataInDb">Add collection to DB</ion-button>
             </ion-card-header>
             <ion-card-content class="storage-action-btn-wrapper"
             >

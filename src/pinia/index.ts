@@ -6,16 +6,13 @@ const { addDocument, getCollection } = useFirebase();
 
 export const useCounterStore = defineStore("counter", () => {
   const collectionData = ref();
-  const addDataInDb = () => {
-    addDocument("test", {
-      name: "george",
-      surname: "khutiashvili",
-    });
-  }
+  const addDataInDb = (data: object) => {
+    addDocument("testcollection", data);
+  };
 
-  const getCollectionFromDb = (name: string) => {
-    collectionData.value = getCollection(name);
-  }
+  const getCollectionFromDb = async (name: string) => {
+    collectionData.value = await getCollection(name);
+  };
 
   return { addDataInDb, getCollectionFromDb, collectionData };
 });

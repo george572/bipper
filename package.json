@@ -12,9 +12,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@capacitor-community/image-to-text": "^5.0.2",
     "@capacitor-firebase/firestore": "^5.1.0-dev.3050d98.1695803101",
     "@capacitor-mlkit/barcode-scanning": "^5.3.0",
     "@capacitor/app": "5.0.6",
+    "@capacitor/camera": "^5.0.7",
     "@capacitor/core": "5.4.1",
     "@capacitor/haptics": "5.0.6",
     "@capacitor/ios": "5.4.1",

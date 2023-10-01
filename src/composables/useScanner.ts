@@ -3,7 +3,7 @@ import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 
 // by convention, composable function names start with "use"
 export function useScanner() {
-  const barcodeData = ref<string[]>([]);
+  const barcodeData = ref<string>("");
   const isScanning = ref<null | boolean>(null);
   const startScan = async () => {
     requestPermissions();
@@ -19,7 +19,7 @@ export function useScanner() {
     const listener = await BarcodeScanner.addListener(
       "barcodeScanned",
       async (result) => {
-        barcodeData.value.push(result.barcode.displayValue);
+        barcodeData.value = result.barcode.displayValue;
         stopScan();
       }
     );

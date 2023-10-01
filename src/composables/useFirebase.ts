@@ -3,27 +3,31 @@ import { FirebaseFirestore } from "@capacitor-firebase/firestore";
 // by convention, composable function names start with "use"
 export function useFirebase() {
   const addDocument = async (reference: string, data: object) => {
+    console.log(reference, data, "ess");
+
     await FirebaseFirestore.addDocument({
-      reference: "users",
+      reference: reference,
       data: {
-        first: "Alan",
-        last: "Turing",
-        born: 1912,
+        expiry: "",
+        name: "",
+        quantity: 0,
+        referenceName: "",
+        supplier: "",
       },
     });
   };
 
-  const setDocument = async () => {
-    await FirebaseFirestore.setDocument({
-      reference: "users/Aorq09lkt1ynbR7xhTUx",
-      data: {
-        first: "Alan",
-        last: "Turing",
-        born: 1912,
-      },
-      merge: true,
-    });
-  };
+  // const setDocument = async () => {
+  //   await FirebaseFirestore.setDocument({
+  //     reference: "users/Aorq09lkt1ynbR7xhTUx",
+  //     data: {
+  //       first: "Alan",
+  //       last: "Turing",
+  //       born: 1912,
+  //     },
+  //     merge: true,
+  //   });
+  // };
 
   const getDocument = async () => {
     const { snapshot } = await FirebaseFirestore.getDocument({
@@ -32,16 +36,16 @@ export function useFirebase() {
     return snapshot;
   };
 
-  const updateDocument = async () => {
-    await FirebaseFirestore.updateDocument({
-      reference: "users/Aorq09lkt1ynbR7xhTUx",
-      data: {
-        first: "Alan",
-        last: "Turing",
-        born: 1912,
-      },
-    });
-  };
+  // const updateDocument = async () => {
+  //   await FirebaseFirestore.updateDocument({
+  //     reference: "users/Aorq09lkt1ynbR7xhTUx",
+  //     data: {
+  //       first: "Alan",
+  //       last: "Turing",
+  //       born: 1912,
+  //     },
+  //   });
+  // };
 
   const deleteDocument = async () => {
     await FirebaseFirestore.deleteDocument({

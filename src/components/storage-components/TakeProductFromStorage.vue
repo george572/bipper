@@ -1,9 +1,50 @@
 <script setup lang='ts'>
-import { IonButton, IonBackButton, IonButtons, IonTitle, IonContent, IonText, IonHeader,IonToolbar, IonItem, IonLabel, IonList} from '@ionic/vue';
+import { IonButton, IonBackButton, IonButtons, IonTitle, IonContent, IonText, IonListHeader, IonHeader,IonToolbar, IonItem, IonLabel, IonList} from '@ionic/vue';
 import { useScanner } from "@/composables/useScanner";
+import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 
-const { startScan, stopScan, isScanning, barcodeData } = useScanner();
+import { ref } from 'vue';
+// const { startScan, stopScan, isScanning, barcodeData } = useScanner();
+const barcodeData = ref<string[]>([]);
+const isScanning = ref<null | boolean>(null);
+  const startScan = async () => {
+    checkPermissions();
+    isScanning.value = true;
+    // The camera is visible behind the WebView, so that you can customize the UI in the WebView.
+    // However, this means that you have to hide all elements that should not be visible.
+    // You can find an example in our demo repository.
+    // In this case we set a class `barcode-scanner-active`, which then contains certain CSS rules for our app.
+    document.querySelector("body")?.classList.add("barcode-scanner-active");
+    // Add the `barcodeScanned` listener
+    const listener = await BarcodeScanner.addListener(
+      "barcodeScanned",
+      async (result) => {
+        barcodeData.value.push(result.barcode.displayValue);
+        stopScan();
+      }
+    );
 
+    // Start the barcode scanner
+    await BarcodeScanner.startScan();
+  };
+  const stopScan = async () => {
+    isScanning.value = false;
+
+    // Make all elements in the WebView visible again
+    document.querySelector("body")?.classList.remove("barcode-scanner-active");
+
+    // Remove all listeners
+    await BarcodeScanner.removeAllListeners();
+
+    // Stop the barcode scanner
+    await BarcodeScanner.stopScan();
+  };
+
+  const checkPermissions = async () => {
+    const { camera } = await BarcodeScanner.checkPermissions();
+    console.log(camera, "permitted");
+    return camera;
+  };
 </script>
 
 <template>
@@ -74,8 +115,25 @@ const { startScan, stopScan, isScanning, barcodeData } = useScanner();
 
 
 .start-scan-btn {
-    margin: 0 auto;
-    width: 100%;
-    padding: 15px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 15px;
+}
+
+body.barcode-scanner-active {
+  visibility: hidden;
+  --background: transparent;
+  --ion-background-color: transparent;
+}
+
+.barcode-scanner-modal {
+  visibility: visible;
+}
+
+@media (prefers-color-scheme: dark) {
+  .barcode-scanner-modal {
+    --background: transparent;
+    --ion-background-color: transparent;
+  }
 }
 </style>   
