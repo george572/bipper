@@ -2,8 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import { useFirebase } from "@/composables/useFirebase";
 
-const { addDocument, getCollection, updateDocument, getDocument } = useFirebase();
-
+const { addDocument, updateDocument, getCollection} = useFirebase();
 export const useManageStorageProducts = defineStore("manageProducts", () => {
   const collectionData = ref<ProductData[]>([]);
   const firebaseRestaurantsReference = ref<string>('');

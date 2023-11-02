@@ -26,7 +26,7 @@ import { useHaptics } from '@/composables/useHaptics';
 const { hapticsImpactMedium, hapticsImpactLight } = useHaptics();
 
 import { useRoute } from 'vue-router';
-import { useManageStorageProducts } from '@/pinia';
+import { useManageStorageProducts } from '@/pinia/productsStore';
 
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime)

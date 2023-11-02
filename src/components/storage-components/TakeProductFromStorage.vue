@@ -2,7 +2,7 @@
 import { IonButton, IonPage, onIonViewWillEnter, IonCardHeader, IonIcon, IonButtons, IonTitle, IonSpinner, IonContent, IonText, IonListHeader, IonHeader,IonToolbar, IonItem, IonLabel, IonList} from '@ionic/vue';
 import { useScanner } from "@/composables/useScanner";
 import { ref, onMounted } from 'vue';
-import { useManageStorageProducts } from "@/pinia";
+import { useManageStorageProducts } from "@/pinia/productsStore";
 import { useRouter } from 'vue-router';
 import { chevronForward, chevronBack } from 'ionicons/icons';
 import { useHaptics } from '@/composables/useHaptics';

@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import { useRouter } from 'vue-router';
-import { useManageStorageProducts } from "@/pinia";
+import { useManageStorageProducts } from "@/pinia/productsStore";
 import { useHaptics } from '@/composables/useHaptics';
 const { hapticsImpactMedium } = useHaptics();
 import { Upload, Download } from 'lucide-vue-next';
@@ -9,30 +9,12 @@ import BButton from '@/components/base/B-Button.vue';
 import { LogOut } from 'lucide-vue-next';
 import { useFirebaseAuth } from '@/composables/useFirebaseAuth';
 import { useLocalStorage } from "@/composables/useLocalStorage";
-import { useFirebase } from '@/composables/useFirebase';
 import { onMounted } from 'vue';
 
-
-const { getDocument, setDocument, addDocument } = useFirebase();
-const { deleteLocalStorageItem, getLocalStorageItem } = useLocalStorage();
 const router = useRouter();
+const { deleteLocalStorageItem} = useLocalStorage();
 const { signOut } = useFirebaseAuth();
-const store = useManageStorageProducts();
 
-onMounted(async () => {
-    let userUid = getLocalStorageItem('uid');
-    const userData = await getDocument('users/' + userUid);
-
-    if (userData.data) {
-        store.setFirebaseRestaurantsReference('users/' + userUid + '/restaurants');
-        // store.setFirebaseEmployeesReference('users/' + userUid + '/employees');
-    } else {
-        await setDocument('users/' + userUid);
-        // add restaurants and employees when neeeded, and not immediately..
-        // await addDocument('users/' + userUid + '/restaurants', {});
-        // await addDocument('users/' + userUid + '/employees', {});
-    }
-});
 
 const logOut = async () => {
     await signOut();

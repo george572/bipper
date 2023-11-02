@@ -9,12 +9,17 @@ const { getCurrentUser } = useFirebaseAuth();
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/storage'
+    redirect: '/dashboard'
   },
   {
     path: '/auth',
     name: 'auth',
     component: () => import("@/views/AuthPage.vue"),
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import("@/views/DashboardView.vue"),
   },
   {
     path: '/storage',

@@ -15,7 +15,7 @@ import {
 import { onMounted, ref, watch } from "vue";
 import { useScanner } from "@/composables/useScanner";
 import ScanResults from "./ScanResults.vue";
-import { useManageStorageProducts } from "@/pinia";
+import { useManageStorageProducts } from "@/pinia/productsStore";
 import BButton from "../base/B-Button.vue";
 import { useRouter } from "vue-router";
 const { startScan, stopScan, isScanning, barcodeData, toggleTorch } = useScanner();
