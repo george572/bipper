@@ -55,6 +55,16 @@
 
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access to your photo library is necessary for selecting and uploading images.</string>
-
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>bipper.net</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

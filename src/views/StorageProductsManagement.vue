@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<!-- <script setup lang='ts'>
 import TakeProductFromStorage from "@/components/storage-components/TakeProductFromStorage.vue";
 import AddProductToStorage from "@/components/storage-components/AddProductToStorage.vue";
 import { IonPage } from "@ionic/vue";
@@ -24,4 +24,4 @@ onMounted(() => {
     <TakeProductFromStorage  v-if="showTakeProductsPage"/>
     <AddProductToStorage  v-if="showAddProductsPage"/>
 </ion-page>
-</template>
+</template> -->

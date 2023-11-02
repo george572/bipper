@@ -1,102 +1,102 @@
 <script setup lang='ts'>
-import { IonButton, IonBackButton, IonButtons, IonTitle, IonContent, IonText, IonListHeader, IonHeader,IonToolbar, IonItem, IonLabel, IonList} from '@ionic/vue';
+import { IonButton, IonPage, onIonViewWillEnter, IonCardHeader, IonIcon, IonButtons, IonTitle, IonSpinner, IonContent, IonText, IonListHeader, IonHeader,IonToolbar, IonItem, IonLabel, IonList} from '@ionic/vue';
 import { useScanner } from "@/composables/useScanner";
-import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
+import { ref, onMounted } from 'vue';
+import { useManageStorageProducts } from "@/pinia";
+import { useRouter } from 'vue-router';
+import { chevronForward, chevronBack } from 'ionicons/icons';
+import { useHaptics } from '@/composables/useHaptics';
+import BButton from '../base/B-Button.vue';
 
-import { ref } from 'vue';
-// const { startScan, stopScan, isScanning, barcodeData } = useScanner();
-const barcodeData = ref<string[]>([]);
-const isScanning = ref<null | boolean>(null);
-  const startScan = async () => {
-    checkPermissions();
-    isScanning.value = true;
-    // The camera is visible behind the WebView, so that you can customize the UI in the WebView.
-    // However, this means that you have to hide all elements that should not be visible.
-    // You can find an example in our demo repository.
-    // In this case we set a class `barcode-scanner-active`, which then contains certain CSS rules for our app.
-    document.querySelector("body")?.classList.add("barcode-scanner-active");
-    // Add the `barcodeScanned` listener
-    const listener = await BarcodeScanner.addListener(
-      "barcodeScanned",
-      async (result) => {
-        barcodeData.value.push(result.barcode.displayValue);
-        stopScan();
-      }
-    );
+const { hapticsImpactLight } = useHaptics();
+const store = useManageStorageProducts();
+const router = useRouter();
+const { startScan, stopScan, isScanning, toggleTorch } = useScanner();
+const currentStorageProducts = ref<ProductData[]>([]);
 
-    // Start the barcode scanner
-    await BarcodeScanner.startScan();
-  };
-  const stopScan = async () => {
-    isScanning.value = false;
+onIonViewWillEnter( async () => {
+  await store.getCollectionFromDb();
+  currentStorageProducts.value = store.collectionData;
+  console.log(currentStorageProducts.value, 'current data')
+});
 
-    // Make all elements in the WebView visible again
-    document.querySelector("body")?.classList.remove("barcode-scanner-active");
+const goToAddProductPage = () => {
+  router.push({name: 'add product'})
+}
 
-    // Remove all listeners
-    await BarcodeScanner.removeAllListeners();
+const handleProductClick = (product: any) => {
+  hapticsImpactLight();
+  router.push(`product-page/${product.id}`)
+}
 
-    // Stop the barcode scanner
-    await BarcodeScanner.stopScan();
-  };
-
-  const checkPermissions = async () => {
-    const { camera } = await BarcodeScanner.checkPermissions();
-    console.log(camera, "permitted");
-    return camera;
-  };
 </script>
 
 <template>
-    <ion-header :translucent="true">
-        <ion-toolbar>
-          <ion-title>Storage</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-header collapse="condense">
-        <ion-toolbar>
-            <ion-buttons slot="start">
-                <ion-back-button default-href="#" color="primary"></ion-back-button>
-              </ion-buttons>
-          <ion-title class="ion-text-center page-title">Take Product From Storage</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <div v-if="!isScanning">
-            <ion-list>
-                <ion-list-header>
-                    <ion-label>Before you start scanning...</ion-label>
-                </ion-list-header>
-                        <ion-item>
-                            <ion-label class="ion-text-wrap">
-                                Make sure the barcode is clearly visible and in correct angle 
-                            </ion-label>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label class="ion-text-wrap">
-                                Make sure there is only one barcode visible in the camera to avoid unnecessarily confusing the scanner
-                            </ion-label>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label class="ion-text-wrap">
-                                Scanner may occasionally get the barcode value incorrectly.
-                                If you know for certain that the product is in stock, try re-scanning 
-                            </ion-label>
-                        </ion-item>
-
-            </ion-list>
-            <ion-button @click="startScan" class="start-scan-btn" color="dark">Start Scan</ion-button>
+<ion-page>
+  <ion-content :forceOverscroll="false">
+        <ion-header :translucent="true">
+            <ion-toolbar>
+              <ion-title>Storage</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-header collapse="condense">
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                  <button @click="router.push('/storage')" color="dark" class="flex items-center">
+                    <ion-icon slot="end" :icon="chevronBack" color="medium"></ion-icon>
+                    <span>Back</span>
+                </button>
+                  </ion-buttons>
+              <ion-title class="ion-text-center page-title">Take Product From Storage</ion-title>
+            </ion-toolbar>
+          </ion-header>
+        <!-- RECENT ITEMS -->
+        <div v-if="store.loading" class="loading-products">
+          <ion-text>
+            Loading Products From Storage
+          </ion-text>
+          <ion-spinner class="ion-loading-spin" name="lines-sharp" color="secondary"></ion-spinner>
         </div>
-        <ion-button @click="stopScan" class="barcode-scanner-modal" color="warning" v-else>Stop Scan</ion-button>
-        <ion-list v-if="barcodeData.length > 0">
-            <ion-list-header>
-              <ion-label>Scanned Barcodes</ion-label>
-            </ion-list-header>
-            <ion-item v-for="barcode in barcodeData" :key="barcode">
-              <ion-label>{{barcode}}</ion-label>
-            </ion-item>
+        <div v-else class="main-p">
+          <div class="bg-white shadow-md rounded-lg overflow-hidden mx-2 mt-5" v-if="currentStorageProducts && currentStorageProducts.length > 0">
+            <div class="px-2 py-4">
+            <ion-list >
+              <ion-list-header>
+                <ion-label>Recent </ion-label>
+              </ion-list-header>
+              <ion-item>
+                <ion-label class="bold-text text-2xl">Name</ion-label>
+                <ion-label class="bold-text">Quantity</ion-label>
+              </ion-item>
+              <div class="products-list">
+                <ion-item class="product-item" v-for="(product, index) in currentStorageProducts" :key="product.name" @click="handleProductClick(product)">
+                  <ion-label>{{product.name}}</ion-label>
+                  <ion-label class="quantity-text">{{product.quantity}}</ion-label>
+                  <ion-icon slot="end" :icon="chevronForward" color="medium"></ion-icon>
+                </ion-item>
+              </div>
             </ion-list>
+          </div>
+        </div>
+          <div v-if="!isScanning && currentStorageProducts && currentStorageProducts.length > 0" class="ion-margin-top rame">
+            <ion-text class="ion-text-wrap custom-label" color="medium">Scan the product if you can't find it in the recent products list</ion-text>
+            <BButton @click="startScan" class="start-scan-btn button-19" style="margin-top: 10px;" color="secondary">
+              <template #title>Start Scan</template>
+            </BButton>
+        </div>
+        <div v-else class="my-20">
+          <ion-card-header class="ion-text-center">
+            <BButton @click="goToAddProductPage" class="start-scan-btn" color="secondary">
+              <template #title>Add Product</template>
+            </BButton>
+            <p class="py-2">You Have No Products</p>
+          </ion-card-header>
+        </div>
+        <ion-button @click="stopScan" class="barcode-scanner-modal" color="warning" v-if="isScanning">Stop Scan</ion-button>
+        <ion-button @click="toggleTorch" class="flashlight" color="warning" v-if="isScanning">Flash</ion-button>
+        </div>
       </ion-content>
+      </ion-page>
 </template>
 
 
@@ -116,8 +116,7 @@ const isScanning = ref<null | boolean>(null);
 
 .start-scan-btn {
   margin: 0 auto;
-  width: 100%;
-  padding: 15px;
+  width: 80%;
 }
 
 body.barcode-scanner-active {
@@ -135,5 +134,47 @@ body.barcode-scanner-active {
     --background: transparent;
     --ion-background-color: transparent;
   }
+}
+
+.loading-products {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+
+.ion-loading-spin {
+  margin-top: 10px;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.products-list {
+  max-height: 300px;
+  overflow: scroll;
+}
+.flashlight {
+  visibility: visible;
+  position: absolute;
+  bottom: 20px;
+  left: 10px;
+}
+
+.quantity-text {
+  padding-left: 29px;
+}
+
+.main-p {
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  justify-content: space-between;
+  height: 82vh;
+}
+.rame {
+  padding: 0 20px;
 }
 </style>   

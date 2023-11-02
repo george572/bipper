@@ -1,19 +1,17 @@
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref } from "vue";
 import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
-
+import { toggle } from "ionicons/icons";
+import { useHaptics } from '@/composables/useHaptics';
+const {  hapticsImpactLight } = useHaptics();
 // by convention, composable function names start with "use"
 export function useScanner() {
   const barcodeData = ref<string>("");
   const isScanning = ref<null | boolean>(null);
   const startScan = async () => {
-    requestPermissions();
+    hapticsImpactLight();
     checkPermissions();
+    requestPermissions();
     isScanning.value = true;
-
-    // The camera is visible behind the WebView, so that you can customize the UI in the WebView.
-    // However, this means that you have to hide all elements that should not be visible.
-    // You can find an example in our demo repository.
-    // In this case we set a class `barcode-scanner-active`, which then contains certain CSS rules for our app.
     document.querySelector("body")?.classList.add("barcode-scanner-active");
     // Add the `barcodeScanned` listener
     const listener = await BarcodeScanner.addListener(
@@ -23,7 +21,7 @@ export function useScanner() {
         stopScan();
       }
     );
-
+    
     // Start the barcode scanner
     await BarcodeScanner.startScan();
   };
@@ -94,15 +92,13 @@ export function useScanner() {
 
   const checkPermissions = async () => {
     const { camera } = await BarcodeScanner.checkPermissions();
-    console.log(camera, "permitted");
     return camera;
   };
 
   const requestPermissions = async () => {
     const { camera } = await BarcodeScanner.requestPermissions();
-    console.log(camera);
     return camera;
   };
   // expose managed state as return value
-  return { startScan, stopScan, isScanning, barcodeData };
+  return { startScan, stopScan, isScanning, barcodeData, toggleTorch };
 }

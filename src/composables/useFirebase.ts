@@ -1,51 +1,34 @@
 import { FirebaseFirestore } from "@capacitor-firebase/firestore";
 
-// by convention, composable function names start with "use"
 export function useFirebase() {
   const addDocument = async (reference: string, data: object) => {
-    console.log(reference, data, "ess");
-
+    const dataCopy = { ...data, createdAt: new Date() };
     await FirebaseFirestore.addDocument({
       reference: reference,
-      data: {
-        expiry: "",
-        name: "",
-        quantity: 0,
-        referenceName: "",
-        supplier: "",
-      },
+      data: dataCopy
     });
   };
 
-  // const setDocument = async () => {
-  //   await FirebaseFirestore.setDocument({
-  //     reference: "users/Aorq09lkt1ynbR7xhTUx",
-  //     data: {
-  //       first: "Alan",
-  //       last: "Turing",
-  //       born: 1912,
-  //     },
-  //     merge: true,
-  //   });
-  // };
+  const setDocument = async (reference: string) => {
+    await FirebaseFirestore.setDocument({
+      reference: reference,
+      data: {'ae' : new Date()},
+    });
+  };
 
-  const getDocument = async () => {
+  const getDocument = async (reference: string) => {
     const { snapshot } = await FirebaseFirestore.getDocument({
-      reference: "users/Aorq09lkt1ynbR7xhTUx",
+      reference: reference,
     });
     return snapshot;
   };
 
-  // const updateDocument = async () => {
-  //   await FirebaseFirestore.updateDocument({
-  //     reference: "users/Aorq09lkt1ynbR7xhTUx",
-  //     data: {
-  //       first: "Alan",
-  //       last: "Turing",
-  //       born: 1912,
-  //     },
-  //   });
-  // };
+  const updateDocument = async (reference: string, data: object) => {
+    await FirebaseFirestore.updateDocument({
+      reference: reference,
+      data: data
+    });
+  };
 
   const deleteDocument = async () => {
     await FirebaseFirestore.deleteDocument({
@@ -56,103 +39,20 @@ export function useFirebase() {
   const getCollection = async (reference: string) => {
     const { snapshots } = await FirebaseFirestore.getCollection({
       reference: reference,
-      //   compositeFilter: {
-      //     type: "and",
-      //     queryConstraints: [
-      //       {
-      //         type: "where",
-      //         fieldPath: "born",
-      //         opStr: "==",
-      //         value: 1912,
-      //       },
-      //     ],
-      //   },
-      //   queryConstraints: [
-      //     {
-      //       type: "orderBy",
-      //       fieldPath: "born",
-      //       directionStr: "desc",
-      //     },
-      //     {
-      //       type: "limit",
-      //       limit: 10,
-      //     },
-      //   ],
+      queryConstraints: [
+        {
+          type: 'orderBy',
+          fieldPath: 'createdAt',
+          directionStr: 'desc',
+        },
+        {
+          type: 'limit',
+          limit: 20,
+        },
+      ],
     });
     return snapshots;
   };
-
-  const enableNetwork = async () => {
-    await FirebaseFirestore.enableNetwork();
-  };
-
-  const disableNetwork = async () => {
-    await FirebaseFirestore.disableNetwork();
-  };
-
-  const addDocumentSnapshotListener = async () => {
-    const callbackId = await FirebaseFirestore.addDocumentSnapshotListener(
-      {
-        reference: "users/Aorq09lkt1ynbR7xhTUx",
-      },
-      (event, error) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log(event);
-        }
-      }
-    );
-    return callbackId;
-  };
-
-  const addCollectionSnapshotListener = async () => {
-    const callbackId = await FirebaseFirestore.addCollectionSnapshotListener(
-      {
-        reference: "users",
-        compositeFilter: {
-          type: "and",
-          queryConstraints: [
-            {
-              type: "where",
-              fieldPath: "born",
-              opStr: "==",
-              value: 1912,
-            },
-          ],
-        },
-        queryConstraints: [
-          {
-            type: "orderBy",
-            fieldPath: "born",
-            directionStr: "desc",
-          },
-          {
-            type: "limit",
-            limit: 10,
-          },
-        ],
-      },
-      (event, error) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log(event);
-        }
-      }
-    );
-    return callbackId;
-  };
-
-  const removeSnapshotListener = async (callbackId: string) => {
-    await FirebaseFirestore.removeSnapshotListener({
-      callbackId,
-    });
-  };
-
-  const removeAllListeners = async () => {
-    await FirebaseFirestore.removeAllListeners();
-  };
   // expose managed state as return value
-  return { addDocument, getCollection };
+  return { addDocument, getCollection, updateDocument, setDocument, getDocument };
 }

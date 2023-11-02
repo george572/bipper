@@ -3,209 +3,113 @@ import {
   IonButton,
   IonBackButton,
   IonButtons,
-  IonActionSheet,
   IonTitle,
   IonContent,
-  IonText,
   IonHeader,
   IonToolbar,
-  IonItem,
-  IonLabel,
-  IonList,
+  IonToast,
+  IonPage,
+  onIonViewDidLeave,
+  onIonViewDidEnter
 } from "@ionic/vue";
+import { onMounted, ref, watch } from "vue";
 import { useScanner } from "@/composables/useScanner";
-import { useCounterStore } from "@/pinia";
-import { ref } from "vue";
-import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
-import { Ocr, TextDetections } from "@capacitor-community/image-to-text";
+import ScanResults from "./ScanResults.vue";
+import { useManageStorageProducts } from "@/pinia";
+import BButton from "../base/B-Button.vue";
+import { useRouter } from "vue-router";
+const { startScan, stopScan, isScanning, barcodeData, toggleTorch } = useScanner();
+const store = useManageStorageProducts();
+const currentStorageProducts = ref<ProductData[]>([]);
+const productExists = ref<null | boolean>(true);
+const router = useRouter();
+const currentProduct = ref<ProductData>();
+const disableInfoEditing = ref(false);
 
-const { startScan, stopScan, isScanning, barcodeData } = useScanner();
-const store = useCounterStore();
 
-const currentProductData = ref({
-  name: "",
-  quantity: 0,
-  expiry: "",
-  supplier: "",
-  referenceName: "",
+onIonViewDidEnter(async () => {
+  await store.getCollectionFromDb();
+  currentStorageProducts.value = store.collectionData;
 });
 
-const saveProducts = () => {
-  store.addDataInDb(currentProductData.value);
-};
+onIonViewDidLeave(() => {
+  barcodeData.value = "";
+});
 
-const detectedText = ref<string[]>([]);
-const textRecognition = async (action: string) => {
-  let source = action === "upload" ? CameraSource.Photos : CameraSource.Camera;
-  detectedText.value = [];
-  const photo = await Camera.getPhoto({
-    quality: 90,
-    allowEditing: true,
-    resultType: CameraResultType.Uri,
-    source: source, // This line specifies that we want to choose an existing photo from the gallery
-  });
-
-  const data: TextDetections = await Ocr.detectText({
-    filename: photo.path ?? "",
-  });
-
-  for (let detection of data.textDetections) {
-    detectedText.value.push(detection.text);
-    console.log(detection.text);
+const checkIfBarcodeExists = (barcode: string) => {
+  const product = currentStorageProducts.value.find((product) => product.barCode === Number(barcode));
+  if (product) {
+    if (product && product.quantity && Number(product.quantity) > 0) {
+      router.push(`product-page/${product.id}`);
+    } else {
+      disableInfoEditing.value = true;
+      currentProduct.value = product;
+    }
   }
 };
 
-const actionSheetButtons = [
-  {
-    text: "Camera",
-    data: {
-      handler: () => textRecognition('camera'),
-    },
-  },
-  {
-    text: "Gallery",
-    data: {
-      handler: () => textRecognition('upload'),
-    },
-  },
-  {
-    text: "Cancel",
-    role: "cancel",
-    data: {
-      action: "cancel",
-    },
-  },
-];
+watch(barcodeData, (newVal) => {
+  checkIfBarcodeExists(newVal);
+});
 </script>
 
 <template>
-  <ion-header :translucent="true">
-    <ion-toolbar>
-      <ion-title>Storage</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-back-button default-href="#" color="primary"></ion-back-button>
-      </ion-buttons>
-      <ion-title class="ion-text-center page-title">Add New Porudct</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <div v-if="!isScanning">
-      <ion-list v-if="barcodeData.length === 0">
-        <ion-list-header>
-          <ion-label>Before you start scanning...</ion-label>
-        </ion-list-header>
-        <ion-item>
-          <ion-label class="ion-text-wrap">
-            Make sure the barcode is clearly visible and in correct angle
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label class="ion-text-wrap">
-            Make sure there is only one barcode visible in the camera to avoid
-            unnecessarily confusing the scanner
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label class="ion-text-wrap">
-            Scanner may occasionally get the barcode value incorrectly. It's
-            recommended to check the numbers time-to-time on the actual barcode
-            and the scanned barcode results
-          </ion-label>
-        </ion-item>
-        <ion-button @click="startScan" class="start-scan-btn" color="dark"
-          >Start Scan</ion-button
-        >
-      </ion-list>
-    </div>
-    <ion-button
-      @click="stopScan"
-      class="barcode-scanner-modal"
-      color="warning"
-      v-else
-      >Stop Scan</ion-button
-    >
-    <ion-list v-if="barcodeData.length > 0">
-      <ion-list-header>
-        <ion-label>Product Information</ion-label>
-      </ion-list-header>
-      <ion-item>
-        <ion-label>Barcode : {{ barcodeData }}</ion-label>
-      </ion-item>
-      <ion-item>
-        <ion-input
-          type="text"
-          v-model="currentProductData.name"
-          label="Name:"
-          placeholder="ex : corn pack"
-        ></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input
-          type="text"
-          v-model="currentProductData.quantity"
-          label="Quantity:"
-          placeholder="ex: 12"
-        ></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-text>Expiry Date:</ion-text>
-        <ion-button id="open-action-sheet" class="expiry-date-btn">SCAN</ion-button>
-        <ion-action-sheet
-        trigger="open-action-sheet"
-        header="Decide How do you want to perform a scan"
-        :buttons="actionSheetButtons"
-      ></ion-action-sheet>
-      </ion-item>
-      <ion-item>
-        <ion-input
-          type="text"
-          v-model="currentProductData.supplier"
-          label="Supplier (Optional):"
-          placeholder="ex: Corn SUP"
-        ></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input
-          type="text"
-          v-model="currentProductData.referenceName"
-          label="Reference Name(Optional):"
-          placeholder="ex: my corn"
-        ></ion-input>
-      </ion-item>
-      <ion-button color="dark" class="start-scan-btn" @click="saveProducts">
-        Save
-      </ion-button>
-      <ion-button @click="startScan" class="start-scan-btn" color="dark"
-        >New Scan</ion-button
-      >
-    </ion-list>
-  </ion-content>
-  <div v-if="barcodeData.length < 1">
-    <ion-list>
-      <ion-item> Recognize text </ion-item>
-      <ion-button color="dark" class="start-scan-btn" @click="textRecognition"
-        >TAKE IMAGE</ion-button
-      >
-      <ion-button
-        color="dark"
-        class="start-scan-btn"
-        @click="textRecognition('upload')"
-        >UPLOAD IMAGE</ion-button
-      >
-      <ion-item v-if="detectedText.length > 0">
-        <ion-text class="ion-text-wrap ion-padding-bottom">
-          {{ detectedText.join(" ") }}
-        </ion-text>
-      </ion-item>
-    </ion-list>
-  </div>
+  <ion-page>
+    <ion-content :forceOverscroll="false" color="secondary">
+      <ion-header :translucent="true">
+        <ion-toolbar>
+          <ion-title>Storage</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-header collapse="condense">
+        <ion-toolbar color="secondary">
+          <ion-buttons slot="start">
+            <ion-back-button default-href="#" color="dark"></ion-back-button>
+          </ion-buttons>
+          <ion-title class="ion-text-center page-title">Add New Porudct</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <div v-if="!isScanning" class="h-[84vh]">
+        <div v-if="barcodeData.length === 0" class="h-full flex flex-col items-center justify-around">
+          <div class="bg-white shadow-md rounded-lg overflow-hidden mx-5">
+            <div class="px-6 py-4">
+              <h2 class="text-xl font-semibold pb-2">Before you start scanning...</h2>
+              <p class="text-gray-700 mb-4 pt-3">Make sure the barcode is clearly visible and in correct angle</p>
+              <p class="text-gray-700 mb-4 border-t border-gray-300 pt-3">Make sure there is only one barcode visible in
+                the camera to avoid unnecessarily confusing the scanner</p>
+              <p class="text-gray-700 mb-4 border-t border-gray-300 pt-3">Scanner may occasionally get the barcode value
+                incorrectly. It's recommended to check the numbers time-to-time on the actual barcode and the scanned
+                barcode results</p>
+            </div>
+          </div>
+          <BButton @click="startScan">
+            <template #title>Start Scan</template>
+          </BButton>
+        </div>
+        <scan-results v-else :disable-editing="disableInfoEditing" :product-data="(currentProduct as ProductData)" :barcode-data="barcodeData" @start-scan="startScan" />
+      </div>
+      <div v-else class="camera-controls-wrapper">
+        <ion-button @click="stopScan" class="barcode-scanner-modal" color="warning">Stop Scan</ion-button>
+        <ion-button @click="toggleTorch" class="flashlight" color="warning">Flash</ion-button>
+      </div>
+      <ion-toast :is-open="store.toastBody.show" @didDismiss="store.showToast('close')" :color="store.toastBody.type"
+        :message="store.toastBody.message" position="bottom" :duration="3000"></ion-toast>
+    </ion-content>
+  </ion-page>
 </template>
 
 <style>
+.camera-controls-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 10px;
+}
+
 .barcode-scanner-active {
   visibility: hidden;
 }
@@ -217,13 +121,18 @@ const actionSheetButtons = [
   right: 10px;
 }
 
-.start-scan-btn {
-  margin: 0 auto;
-  width: 100%;
-  padding: 15px;
+.flashlight {
+  visibility: visible;
+  position: absolute;
+  bottom: 20px;
+  left: 10px;
 }
 
 .expiry-date-btn {
   margin-left: 15px;
+}
+
+.ion-loading-spin {
+  height: 20px;
 }
 </style>

@@ -1,90 +1,90 @@
 <script setup lang='ts'>
-import { IonBackButton, IonButtons, IonIcon, IonText, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonButton  } from '@ionic/vue';
+import { IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import { useRouter } from 'vue-router';
-import {chevronForward} from 'ionicons/icons';
+import { useManageStorageProducts } from "@/pinia";
+import { useHaptics } from '@/composables/useHaptics';
+const { hapticsImpactMedium } = useHaptics();
+import { Upload, Download } from 'lucide-vue-next';
+import BButton from '@/components/base/B-Button.vue';
+import { LogOut } from 'lucide-vue-next';
+import { useFirebaseAuth } from '@/composables/useFirebaseAuth';
+import { useLocalStorage } from "@/composables/useLocalStorage";
+import { useFirebase } from '@/composables/useFirebase';
+import { onMounted } from 'vue';
 
+
+const { getDocument, setDocument, addDocument } = useFirebase();
+const { deleteLocalStorageItem, getLocalStorageItem } = useLocalStorage();
 const router = useRouter();
+const { signOut } = useFirebaseAuth();
+const store = useManageStorageProducts();
 
-const takeProduct = (action: string) => {
-    router.push({name: 'manage-products', query: { action: action }})
+onMounted(async () => {
+    let userUid = getLocalStorageItem('uid');
+    const userData = await getDocument('users/' + userUid);
+
+    if (userData.data) {
+        store.setFirebaseRestaurantsReference('users/' + userUid + '/restaurants');
+        // store.setFirebaseEmployeesReference('users/' + userUid + '/employees');
+    } else {
+        await setDocument('users/' + userUid);
+        // add restaurants and employees when neeeded, and not immediately..
+        // await addDocument('users/' + userUid + '/restaurants', {});
+        // await addDocument('users/' + userUid + '/employees', {});
+    }
+});
+
+const logOut = async () => {
+    await signOut();
+    deleteLocalStorageItem('uid')
+    router.push({ name: 'auth' });
+};
+
+const productAction = (action: string) => {
+    hapticsImpactMedium();
+    action === 'take' ? router.push({ name: 'take product' }) : router.push({ name: 'add product' })
 }
 </script>
 
 <template>
     <ion-page>
-        <ion-header :translucent="true">
-          <ion-toolbar>
-            <ion-title>Storage</ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content :fullscreen="true" >
-          <ion-header collapse="condense">
-            <ion-toolbar>
-                <ion-buttons slot="start">
-                    <ion-back-button default-href="#" color="primary"></ion-back-button>
-                  </ion-buttons>
-              <ion-title class="ion-text-center page-title">Storage Management</ion-title>
-            </ion-toolbar>
-          </ion-header>
+        <ion-content :fullscreen="true" :forceOverscroll="false" color="secondary">
+            <ion-header :translucent="true" color="secondary">
+                <ion-toolbar color="secondary">
+                    <ion-title>Storage</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-header collapse="condense">
+                <ion-toolbar color="secondary">
+                    <ion-title class="ion-text-center page-title">Storage Management</ion-title>
+                </ion-toolbar>
+            </ion-header>
             <ion-card-header>
-                <ion-card-title class="ion-margin-left">
-                    Action
-                </ion-card-title>
+                <ion-card-title class="ion-margin-left"> Action </ion-card-title>
             </ion-card-header>
-            <ion-card-content class="storage-action-btn-wrapper"
-            >
-                <ion-button color="dark" @click="takeProduct('take')">
-                    Take Product
-                    <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
-                </ion-button>
-                <ion-text color="medium" class="button-description">
-                    If you want to take the product from the storage to the kitchen
-                </ion-text>
-                <ion-button size="default"  @click="takeProduct('add')" color="dark" class="submit-btn ion-margin-top">
-                    Add Product
-                    <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
-                </ion-button>
-                <ion-text color="medium" class="button-description">
-                    If you want to add new product in the storage, or re-stock already present one 
-                </ion-text>
-                <ion-button size="default"  color="dark" class="submit-btn ion-margin-top">
-                    Quick search
-                    <ion-icon slot="end" :icon="chevronForward" color="light"></ion-icon>
-                </ion-button>
-                <ion-text color="medium" class="button-description">
-                    If you've set the reference name for the product while adding it in the storage, 
-                    you can quickly search the information about it using quick search 
-                </ion-text>
-            </ion-card-content
-            >
+            <ion-card-content>
+                <div class="flex flex-col items-center justify-center gap-10 h-[50vh]">
+                    <BButton @click="productAction('add')">
+                        <template #title>Add Product</template>
+                        <template #icon>
+                            <Upload />
+                        </template>
+                    </BButton>
+                    <BButton @click="productAction('take')">
+                        <template #title>Take Product</template>
+                        <template #icon>
+                            <Download />
+                        </template>
+                    </BButton>
+                </div>
+            </ion-card-content>
+            <BButton class="absolute bottom-5 right-5 w-[50px] h-[20px] bg-red-600" @click="logOut">
+                <template #icon>
+                    <LogOut class="min-w-[30px] text-red-600" />
+                </template>
+            </BButton>
         </ion-content>
     </ion-page>
 </template>
 
-<style scoped>
-
-.action-btn-wrapper {
-    margin: 20px 0;
-}
-
-.ion-card-title {
-    font-size: 20px;
-}
-.storage-action-btn-wrapper {
-    display: flex;
-    flex-direction: column;
-    padding: 0 18px 20px;
-}
-
-.button-description {
-    padding: 3px 8px 5px;
-}
-
-.divider {
-    width: 100%;
-    margin: 10px auto;
-    height: 0.5px;
-    background-color: rgba(0,0,0,0.5);
-
-}
-</style>
+<style scoped></style>
