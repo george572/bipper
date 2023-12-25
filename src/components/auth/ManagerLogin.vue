@@ -21,6 +21,7 @@ const signInUser = async () => {
     try {
         await store.signIn(userAuthData.value.email, userAuthData.value.password);
         router.push({ name: "storage" });
+        console.log('hae')
     } catch (error) {
         console.log(error);
     }
@@ -28,7 +29,7 @@ const signInUser = async () => {
 </script>
 
 <template>
-    <div class="flex h-full w-full flex-col justify-center gap-1 items-start px-10">
+    <div class="flex h-full w-full flex-col justify-start gap-1 items-start px-10">
         <div @click="$emit('hideManagerLogin')"
             class="w-[50px] h-[50px] rounded-full bg-secondary flex items-center justify-center">
             <ArrowLeft />

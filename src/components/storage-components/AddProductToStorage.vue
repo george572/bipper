@@ -12,7 +12,7 @@ import {
   onIonViewDidLeave,
   onIonViewDidEnter
 } from "@ionic/vue";
-import { onMounted, ref, watch } from "vue";
+import {  ref, watch } from "vue";
 import { useScanner } from "@/composables/useScanner";
 import ScanResults from "./ScanResults.vue";
 import { useManageStorageProducts } from "@/pinia/productsStore";
@@ -27,10 +27,10 @@ const currentProduct = ref<ProductData>();
 const disableInfoEditing = ref(false);
 
 
-onIonViewDidEnter(async () => {
-  await store.getCollectionFromDb();
-  currentStorageProducts.value = store.collectionData;
-});
+// onIonViewDidEnter(async () => {
+//   await store.getCollectionFromDb();
+//   currentStorageProducts.value = store.collectionData;
+// });
 
 onIonViewDidLeave(() => {
   barcodeData.value = "";

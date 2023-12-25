@@ -30,9 +30,9 @@ export function useFirebase() {
     });
   };
 
-  const deleteDocument = async () => {
+  const deleteDocument = async (reference: string) => {
     await FirebaseFirestore.deleteDocument({
-      reference: "users/Aorq09lkt1ynbR7xhTUx",
+      reference: reference,
     });
   };
 
@@ -54,5 +54,5 @@ export function useFirebase() {
     return snapshots;
   };
   // expose managed state as return value
-  return { addDocument, getCollection, updateDocument, setDocument, getDocument };
+  return { addDocument, getCollection, updateDocument, setDocument, getDocument, deleteDocument };
 }

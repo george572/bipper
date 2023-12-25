@@ -20,6 +20,33 @@ const routes: Array<RouteRecordRaw> = [
     path: '/dashboard',
     name: 'dashboard',
     component: () => import("@/views/DashboardView.vue"),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/edit-instance/:id',
+    name: 'edit instance',
+    component: () => import("@/views/EditInstance.vue"),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/add-instance',
+    name: 'addInstance',
+    component: () => import("@/views/AddInstanceStorage.vue"),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/add-employees/:restaurantid',
+    name: 'add employees',
+    component: () => import("@/views/AddEmployees.vue"),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/storage',
@@ -76,9 +103,9 @@ router.beforeEach(async (to, from, next) => {
 const checkIfUserIsAuthenticated = async () => {
   if (localStorage.getLocalStorageItem("uid")) {
     return true;
-  } 
+  }
   const authResp = await getCurrentUser();
-  if (authResp !== undefined && authResp && authResp.uid) {
+  if (authResp && authResp.uid) {
     localStorage.setLocalStorageItem('uid', (authResp.uid));
   }
   return authResp !== undefined;

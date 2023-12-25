@@ -4,7 +4,7 @@ export default {
   darkMode: false,
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
-    darkMode: false,
+    darkMode: true,
     extend: {
       colors: {
         primary: "#015AB8",

@@ -1,33 +1,13 @@
-/* eslint-env node */
-require("@rushstack/eslint-patch/modern-module-resolution");
-
 module.exports = {
-  root: true,
-  plugins: ["tailwindcss"],
   extends: [
-    "plugin:vue/vue3-essential",
-    "eslint:recommended",
-    "@vue/eslint-config-typescript",
-    "plugin:vue/vue3-essential",
-    "eslint:recommended",
-    "@vue/eslint-config-typescript",
-    "plugin:vue/vue3-recommended",
+    // add more generic rulesets here, such as:
+    // 'eslint:recommended',
+    'plugin:vue/vue3-recommended',
+    'plugin:vue/vue3-strongly-recommended'
+    // 'plugin:vue/recommended' // Use this if you are using Vue.js 2.x.
   ],
-  parserOptions: {
-    ecmaVersion: "latest",
-  },
   rules: {
-    "comma-dangle": ["error", "always-multiline"],
-    semi: ["error", "always"],
-    "func-call-spacing": "warn",
-    "no-case-declarations": "off",
-    "object-curly-spacing": ["error", "always"],
-    "vue/multi-word-component-names": "off",
-    "vue/no-reserved-component-names": "off",
-    "vue/no-multiple-template-root": "off",
-    "vue/no-template-shadow": "off",
-    "vue/v-on-event-hyphenation": ["error", "always"],
-    "tailwindcss/classnames-order": "off",
-    "tailwindcss/no-contradicting-classname": "warn",
-  },
-};
+    // override/add rules settings here, such as:
+    // 'vue/no-unused-vars': 'error'
+  }
+}

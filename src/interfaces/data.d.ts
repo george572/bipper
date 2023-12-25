@@ -13,3 +13,12 @@ interface UserAuthData {
     email: string,
     password: string,
 }
+
+interface UserRestaurants {
+    assigned_employees: object[],
+    createdAt: string,
+    location: string,
+    name: string,
+    products: string[],
+    id: string
+}

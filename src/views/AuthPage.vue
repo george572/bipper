@@ -25,7 +25,7 @@ const signUpUser = async () => {
 const checkPassCode = () => {
   // make request to server and check for the pass code
   // ignoring for now unless back-end is implemented
-  router.push({ name: "storage" });
+  router.push({ name: "dashboard" });
 }
 </script>
 

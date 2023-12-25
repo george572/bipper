@@ -28,7 +28,8 @@ export const useAuthStore = defineStore("FirebaseAuth", () => {
     const signUp = async (email: string, password: string) => {
         loading.value = true;
         try {
-            await createUserWithEmailAndPassword({ email, password });
+            const resp = await createUserWithEmailAndPassword({ email, password });
+            console.log(resp, 'es aris user add')
             showToast('open', 'success', 'Successfully signed Up!');
         } catch (error: any) {
             showToast('open', 'danger', error.message);

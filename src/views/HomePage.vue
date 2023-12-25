@@ -1,7 +1,6 @@
 <script setup lang='ts'>
 import { IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import { useRouter } from 'vue-router';
-import { useManageStorageProducts } from "@/pinia/productsStore";
 import { useHaptics } from '@/composables/useHaptics';
 const { hapticsImpactMedium } = useHaptics();
 import { Upload, Download } from 'lucide-vue-next';
@@ -9,7 +8,6 @@ import BButton from '@/components/base/B-Button.vue';
 import { LogOut } from 'lucide-vue-next';
 import { useFirebaseAuth } from '@/composables/useFirebaseAuth';
 import { useLocalStorage } from "@/composables/useLocalStorage";
-import { onMounted } from 'vue';
 
 const router = useRouter();
 const { deleteLocalStorageItem} = useLocalStorage();

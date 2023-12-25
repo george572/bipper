@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { reactive, computed, onMounted } from 'vue';
-import { useManageStorageProducts } from "@/pinia";
+import { useManageStorageProducts } from '@/pinia/productsStore';
 import {
   IonSpinner,
   IonDatetime,
@@ -88,7 +88,7 @@ const saveProducts = async () => {
 </script>
 
 <template>
-  <div class="bg-white shadow-md rounded-lg overflow-hidden mx-5 mt-10">
+  <div class="shadow-md rounded-lg overflow-hidden mx-5 mt-10">
     <div class="p-4">
       <p v-if="props.productData" class=" text-yellow-400 text-center py-2">The product you have scanned already exists in your storage, but it's quantity is zero</p>
       <h2 class="text-xl font-semibold pb-2 border-b">Poduct Information</h2>

@@ -35,4 +35,4 @@ const signInUser = async () => {
         <ion-toast :is-open="store.toastBody.show" @didDismiss="store.showToast('close')" :color="store.toastBody.type"
             :message="store.toastBody.message" position="bottom" :duration="3000"></ion-toast>
     </div>
-</template>@/composables/useLocalStorage
+</template>
